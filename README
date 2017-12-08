@@ -1,0 +1,34 @@
+主要文件介绍：
+root
+	|-data_augmentation
+		|-data_augmentation.py:用于对采集到数据（图片）进行增强变换（旋转、缩放、动态二值等）
+		|-data_convert.py:将生成的jpg数据集转换成fann可以处理的格式
+		|-capture.txt:使用摄像头采集的50张数字图片
+	|-fann
+		|-examples
+			|-nr.c:fann训练的源文件
+	|-compiler
+		|-gen/mif/
+			|-npu_compiler.py:对fann生成的网络结构文件进行编译，并产生测试向量
+	|-artix-dev
+		|-sw/testANN/
+			|-testANN_single:仅对测试数据进行测试的案例
+			|-testANN_cam:使用摄像头采集数据进行动态识别
+			|-testANN.h:所有ann内核配置数据、测试数据的头文件
+		|-tb/all_case_mif/
+			|-gen_ann_header.pl:将compiler产生的数据转换成testANN.h
+
+
+使用流程：
+	总体使用方向为 数据采集->data_augmentation->fann->compiler->artix-dev->上板调试
+	1.data_augmentation/：
+		更改py文件内容，最终生成nr.train和nr.test，其中train.data可以大些用于训练。
+	2.fann/：
+		在github上下载fann并安装。
+		将上一步生成的train.data和test.data放在datasets中，将nr.c放在example中，并在Makefile添加nr目标,对数据进行训练并生成nr.net
+	3.compiler/:
+		将nr.net更名为nr.nn放置在nn_configs文件夹下，并将test.data放在training_data，执行make nr,即可执行编译流程，生成mif文件夹（包含配置文件和输入向量，以及模拟的输出向量），也可以修改npu_compiler.py文件得到测试用例的正确率。
+	4.artix-dev/
+	将mif文件夹移至tb/all_case_mif下，并重新命名，比如mif_cam。
+	执行perl gen_ann_header.pl --testcase=cam,即可生成testANN.h到sw/apps/testANN文件夹下，testANN.h包含多个数组，分别是指令，权重，输入测试向量，输出测试向量，这些数组可以在c文件中直接引用。
+	参看sw/apps/testANN/testANN_cam和sw/apps/testANN/testANN_single和对testANN.h的使用。在sw/apps/testANN/build下直接make testANN_cam或者testANN_single即可生成spi_stim.txt文件进行下载。

@@ -1,0 +1,14 @@
+依赖的环境：
+	1. Icarus Verilog, 一个开源的Verilog综合工具，安装指导参见http://iverilog.wikia.com/wiki/Installation_Guide
+	2. Vivado,Xilinx的开发工具，使用的是2015.2或者2016.2
+	3. python,使用的python2.7
+
+使用方法：
+
+	1.首先使用FANN（http://leenissen.dk/fann/wp/）进行训练，生成神经网络的拓扑结构，都放在hardware/gen/mif/nn_configs 里面
+	2. 训练的数据都是放在hardware/gen/mif/traning_data
+	3. 在hardware/gen/mi目录下面运行make命令，会生成mif文件夹,里面包含输入数据,指令数据,偏值数据和权重。
+	4. sim文件夹，主要是用于RTL代码仿真，里面包括对FIFO、npu和查找表sigmoid_lut的仿真。例如进入npu后，可以看到里面包含一个Makefile文件，只需要运行make就可以生成仿真的数据，可以使用Scansion来查看仿真的波形。
+	5. inc文件主要是RTL代码里面包含的一些头文件，包括一些定义的变量和一些宏。
+	6. RTL文件夹主要是神经网络的Verilog代码。
+
