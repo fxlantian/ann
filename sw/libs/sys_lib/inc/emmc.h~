@@ -1,0 +1,45 @@
+
+#include "ppu.h"
+//#include "emmc_callback.h"
+#include <stdlib.h>       //ly
+
+
+#define 	EMMC_REG_CTRL       (EMMC_BASE_ADDR + 0x0 )    /** Control */
+#define 	EMMC_REG_PWREN  	   (EMMC_BASE_ADDR + 0x4 ) 	  /** Power-enable */
+#define 	EMMC_REG_CLKDIV 	   (EMMC_BASE_ADDR + 0x8 ) 	  /** Clock divider */
+#define 	EMMC_REG_CLKSRC 	   (EMMC_BASE_ADDR + 0xC ) 	  /** Clock source */
+#define 	EMMC_REG_CLKENA 	   (EMMC_BASE_ADDR + 0x10 )    /** Clock enable */
+#define 	EMMC_REG_TMOUT  	   (EMMC_BASE_ADDR + 0x14 )    /** Timeout */
+#define 	EMMC_REG_BLKSIZ 	   (EMMC_BASE_ADDR + 0x1C )    /** Block Size */
+#define 	EMMC_REG_BYTCNT 	   (EMMC_BASE_ADDR + 0x20 )    /** Byte count */
+#define 	EMMC_REG_INTMSK 	   (EMMC_BASE_ADDR + 0x24 )    /** Interrupt Mask */
+#define 	EMMC_REG_CMDARG 	   (EMMC_BASE_ADDR + 0x28 )    /** Command Argument */
+#define 	EMMC_REG_CMD    	   (EMMC_BASE_ADDR + 0x2C )    /** Command */
+#define 	EMMC_REG_RESP0  	   (EMMC_BASE_ADDR + 0x30 )    /** Response 0 */
+#define 	EMMC_REG_RESP1  	   (EMMC_BASE_ADDR + 0x34 )    /** Response 1 */
+#define 	EMMC_REG_RESP2  	   (EMMC_BASE_ADDR + 0x38 )    /** Response 2 */
+#define 	EMMC_REG_RESP3  	   (EMMC_BASE_ADDR + 0x3C )    /** Response 3 */
+#define 	EMMC_REG_MINTSTS	   (EMMC_BASE_ADDR + 0x40 )    /** Masked interrupt status */
+#define 	EMMC_REG_RINTSTS	   (EMMC_BASE_ADDR + 0x44 )    /** Raw interrupt status */
+#define 	EMMC_REG_STATUS 	   (EMMC_BASE_ADDR + 0x48 )    /** Status */
+#define 	EMMC_REG_FIFOTH 	   (EMMC_BASE_ADDR + 0x4C )    /** FIFO threshold */
+#define 	EMMC_REG_CDETECT	   (EMMC_BASE_ADDR + 0x50 )    /** Card detect */
+#define 	EMMC_REG_WRTPRT 	   (EMMC_BASE_ADDR + 0x54 )    /** Write protect */
+#define 	EMMC_REG_GPIO   	   (EMMC_BASE_ADDR + 0x58 )    /** General Purpose IO */
+#define 	EMMC_REG_TCBCNT 	   (EMMC_BASE_ADDR + 0x5C )    /** Transferred CIU byte count */
+#define 	EMMC_REG_TBBCNT 	   (EMMC_BASE_ADDR + 0x60 )    /** Transferred host/DMA to/from byte count */
+#define 	EMMC_REG_DEBNCE 	   (EMMC_BASE_ADDR + 0x64 )    /** Card detect debounce */
+#define 	EMMC_REG_USRID  	   (EMMC_BASE_ADDR + 0x68 )    /** User ID */
+#define 	EMMC_REG_VERID  	   (EMMC_BASE_ADDR + 0x6C )    /** Version ID */
+#define 	EMMC_REG_HCON   	   (EMMC_BASE_ADDR + 0x70 )    /** Hardware Configuration */
+#define 	EMMC_REG_UHSREG 	   (EMMC_BASE_ADDR + 0x74 )    /** Reserved */  
+#define 	EMMC_REG_BMOD	       (EMMC_BASE_ADDR + 0x80 )    /** Bus mode Register */
+#define 	EMMC_REG_PLDMND	   	 (EMMC_BASE_ADDR + 0x84 )    /** Poll Demand */
+#define 	EMMC_REG_DBADDR		   (EMMC_BASE_ADDR + 0x88 )    /** Descriptor Base Address */
+#define 	EMMC_REG_IDSTS	 	   (EMMC_BASE_ADDR + 0x8C )    /** Internal DMAC Status */
+#define 	EMMC_REG_IDINTEN	   (EMMC_BASE_ADDR + 0x90 )    /** Internal DMAC Interrupt Enable */
+#define 	EMMC_REG_DSCADDR	   (EMMC_BASE_ADDR + 0x94 )    /** Current Host Descriptor Address */
+#define 	EMMC_REG_BUFADDR	   (EMMC_BASE_ADDR + 0x98 )    /** Current Host Buffer Address */
+#define   EMMC_REG_UHS_REG_EXT (EMMC_BASE_ADDR + 0x108)   /** FIFO data read write */
+
+#define	 	EMMC_REG_FIFODAT	   (EMMC_BASE_ADDR + 0x200 )   /** FIFO data read write */
